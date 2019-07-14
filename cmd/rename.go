@@ -1,4 +1,4 @@
-// Copyright © 2018 Herbert Muehlburger <mail@muehlburger.at>
+// Copyright © 2019 Herbert Muehlburger <mail@muehlburger.at>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,10 +27,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// sortCmd represents the sort command
-var sortCmd = &cobra.Command{
-	Use:   "sort",
-	Short: "Sorts photos using EXIF information and copies them to a sorted folder.",
+// renameCmd represents the rename command
+var renameCmd = &cobra.Command{
+	Use:   "rename",
+	Short: "Renames files using modification date information and copies them to a sorted folder.",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		dst, err := cmd.Flags().GetString("dst")
 		if err != nil {
@@ -44,30 +44,25 @@ var sortCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		return sort(src, dst, verbose)
+		return rename(src, dst, verbose)
 	},
 }
 
 func init() {
-	sortCmd.Flags().StringP("dst", "d", "sorted", "Path to the target directory")
-	sortCmd.Flags().StringSliceP("src", "s", []string{"."}, "Paths to source directories")
-	sortCmd.Flags().BoolP("verbose", "v", false, "Show verbose progress messages")
-	rootCmd.AddCommand(sortCmd)
+	renameCmd.Flags().StringP("dst", "d", "sorted", "Path to the target directory")
+	renameCmd.Flags().StringSliceP("src", "s", []string{"."}, "Paths to source directories")
+	renameCmd.Flags().BoolP("verbose", "v", false, "Show verbose progress messages")
+	rootCmd.AddCommand(renameCmd)
 }
 
-var supportedExtensions = map[string]bool{
-	".jpg":  true,
-	".jpeg": true,
-}
-
-func sort(roots []string, dst string, verbose bool) error {
+func rename(roots []string, dst string, verbose bool) error {
 	// Traverse the file tree.
 	paths := make(chan string)
 	go func() {
 		for _, root := range roots {
 			err := walkDir(root, paths)
 			if err != nil {
-				fmt.Printf("psort %s: %v\n", root, err)
+				fmt.Printf("d2n %s: %v\n", root, err)
 			}
 		}
 		close(paths)
@@ -88,9 +83,7 @@ loop:
 				break loop // paths was closed
 			}
 			nfiles++
-			if _, ok := supportedExtensions[strings.ToLower(filepath.Ext(name))]; ok {
-				names = append(names, name)
-			}
+			names = append(names, name)
 		case <-tick:
 			fmt.Printf("%d files\n", nfiles)
 		}
