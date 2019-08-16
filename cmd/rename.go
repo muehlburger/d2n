@@ -26,6 +26,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const dateFormat string = "2006-01-02T15.04.05"
+
 // renameCmd represents the rename command
 var renameCmd = &cobra.Command{
 	Use:   "rename",
@@ -98,7 +100,7 @@ func Rename(src string) error {
 		return err
 	}
 
-	dst := fmt.Sprintf("%s%s", f.ModTime().Format("2006_01_02-15_04_05"), strings.ToLower(filepath.Ext(src)))
+	dst := fmt.Sprintf("%s%s", f.ModTime().Format(dateFormat), strings.ToLower(filepath.Ext(src)))
 	dst = filepath.Join(filepath.Dir(src), dst)
 	log.Printf("%s -> %s", src, dst)
 	return nil //os.Rename(src, dst)
