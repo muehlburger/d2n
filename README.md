@@ -1,5 +1,7 @@
 # d2n
 
+d2n adds ISO time-stamps to files.
+
 [Features](#features) | [Installation](#installation) | [Usage](#usage) | [Examples](#examples) | [Command-line options](#options) | [Configuration](#configuration)
 
 ## Features
