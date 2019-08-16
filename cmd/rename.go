@@ -16,7 +16,6 @@ package cmd
 
 import (
 	"fmt"
-	"io"
 	"io/ioutil"
 	"log"
 	"os"
@@ -32,10 +31,6 @@ var renameCmd = &cobra.Command{
 	Use:   "rename",
 	Short: "Renames files using modification date information and copies them to a sorted folder.",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		dst, err := cmd.Flags().GetString("dst")
-		if err != nil {
-			return err
-		}
 		src, err := cmd.Flags().GetStringSlice("src")
 		if err != nil {
 			return err
@@ -44,25 +39,24 @@ var renameCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		return rename(src, dst, verbose)
+		return rename(src, verbose)
 	},
 }
 
 func init() {
-	renameCmd.Flags().StringP("dst", "d", "sorted", "Path to the target directory")
 	renameCmd.Flags().StringSliceP("src", "s", []string{"."}, "Paths to source directories")
 	renameCmd.Flags().BoolP("verbose", "v", false, "Show verbose progress messages")
 	rootCmd.AddCommand(renameCmd)
 }
 
-func rename(roots []string, dst string, verbose bool) error {
+func rename(roots []string, verbose bool) error {
 	// Traverse the file tree.
 	paths := make(chan string)
 	go func() {
 		for _, root := range roots {
 			err := walkDir(root, paths)
 			if err != nil {
-				fmt.Printf("d2n %s: %v\n", root, err)
+				fmt.Printf("date2name %s: %v\n", root, err)
 			}
 		}
 		close(paths)
@@ -89,95 +83,25 @@ loop:
 		}
 	}
 
-	if nfiles > 0 {
-		if err := os.MkdirAll(dst, 0755); err != nil {
-			return err
-		}
-	}
-
 	for _, f := range names {
-		if err := CopyFile(f, dst); err != nil {
+		if err := Rename(f); err != nil {
 			return err
 		}
 	}
 	return nil
 }
 
-// CopyFile copies files from src to destination.
-func CopyFile(src, dst string) error {
-	in, err := os.Open(src)
-	if err != nil {
-		return err
-	}
-	defer in.Close()
-
-	dstFilename, err := dstFilename(src)
-	if err != nil {
-		return err
-	}
-	outfile := filepath.Join(dst, dstFilename)
-	log.Printf("%s -> %s", src, outfile)
-	out, err := os.OpenFile(outfile, os.O_RDWR|os.O_CREATE, 0744)
+// Rename renames files from src to dst.
+func Rename(src string) error {
+	f, err := os.Stat(src)
 	if err != nil {
 		return err
 	}
 
-	defer func() {
-		if e := out.Close(); e != nil {
-			err = e
-		}
-	}()
-	_, err = io.Copy(out, in)
-
-	fi, err := os.Stat(in.Name())
-	if err != nil {
-		return err
-	}
-
-	if err = os.Chmod(out.Name(), fi.Mode()); err != nil {
-		os.Remove(out.Name())
-		return err
-	}
-
-	if err = os.Chtimes(out.Name(), fi.ModTime(), fi.ModTime()); err != nil {
-		os.Remove(out.Name())
-		return err
-	}
-	return nil
-}
-
-func dstFilename(file string) (string, error) {
-	tm, err := getCreationDatetime(file)
-	if err != nil {
-		return "", err
-	}
-	ext := strings.ToLower(filepath.Ext(file)) // e.g., ".jpg", ".JPEG"
-	outfile := fmt.Sprintf("%d-%02d-%02d_%02d%02d%02d%s", tm.Year(), tm.Month(), tm.Day(), tm.Hour(), tm.Minute(), tm.Second(), ext)
-	outfile = filepath.Base(outfile)
-	return outfile, nil
-}
-
-// CreationTime extracts the creation Date of the given File.
-func getCreationDatetime(path string) (time.Time, error) {
-	f, err := os.Open(path)
-	if err != nil {
-		return time.Time{}, err
-	}
-	defer f.Close()
-
-	exif.RegisterParsers(mknote.All...)
-
-	x, err := exif.Decode(f)
-	if err != nil {
-		return time.Time{}, err
-	}
-
-	tm, err := x.DateTime()
-	if err != nil {
-		return time.Time{}, err
-	}
-
-	return tm, nil
+	dst := fmt.Sprintf("%s%s", f.ModTime().Format("2006_01_02-15_04_05"), strings.ToLower(filepath.Ext(src)))
+	dst = filepath.Join(filepath.Dir(src), dst)
+	log.Printf("%s -> %s", src, dst)
+	return os.Rename(src, dst)
 }
 
 // walkDir recursively walks the file tree rooted at dir

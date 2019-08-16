@@ -14,10 +14,10 @@ go get -u github.com/muehlburger/d2n
 
 ### Examples
 
-Copy photos:
+Sort files:
 
 ```bash
-d2n src dst
+d2n src
 ```
 
 ## Authors
