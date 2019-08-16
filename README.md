@@ -17,7 +17,7 @@ go get -u github.com/muehlburger/d2n
 Sort files:
 
 ```bash
-d2n src
+d2n rename -s path-to-starting-folder
 ```
 
 ## Authors

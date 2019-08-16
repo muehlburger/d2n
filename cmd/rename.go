@@ -101,7 +101,7 @@ func Rename(src string) error {
 	dst := fmt.Sprintf("%s%s", f.ModTime().Format("2006_01_02-15_04_05"), strings.ToLower(filepath.Ext(src)))
 	dst = filepath.Join(filepath.Dir(src), dst)
 	log.Printf("%s -> %s", src, dst)
-	return os.Rename(src, dst)
+	return nil //os.Rename(src, dst)
 }
 
 // walkDir recursively walks the file tree rooted at dir
