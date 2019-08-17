@@ -31,7 +31,7 @@ const dateFormat string = "2006-01-02T15.04.05"
 // renameCmd represents the rename command
 var renameCmd = &cobra.Command{
 	Use:   "rename",
-	Short: "Renames files using modification date information and copies them to a sorted folder.",
+	Short: "Renames files using modification date information.",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		src, err := cmd.Flags().GetStringSlice("src")
 		if err != nil {
@@ -58,7 +58,7 @@ func rename(roots []string, verbose bool) error {
 		for _, root := range roots {
 			err := walkDir(root, paths)
 			if err != nil {
-				fmt.Printf("date2name %s: %v\n", root, err)
+				fmt.Printf("d2n %s: %v\n", root, err)
 			}
 		}
 		close(paths)
@@ -109,6 +109,15 @@ func Rename(src string) error {
 // walkDir recursively walks the file tree rooted at dir
 // and sends the absolute path of each found file on paths.
 func walkDir(dir string, paths chan<- string) error {
+	fi, err := os.Stat(dir)
+	if !fi.IsDir() {
+		path, err := filepath.Abs(filepath.Join(dir))
+		if err != nil {
+			log.Fatal(err)
+		}
+		paths <- path
+		return nil
+	}
 	fis, err := ioutil.ReadDir(dir)
 	if err != nil {
 		return fmt.Errorf("could not read dir %s: %v", dir, err)

@@ -26,9 +26,9 @@ var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "date2name",
-	Short: "date2name renames files to contain a date.",
-	Long: `date2name sorts photos using EXIF information and flattens the directory structure. 
+	Use:   "d2n",
+	Short: "d2n renames files to contain a date.",
+	Long: `d2n sorts photos using EXIF information and flattens the directory structure. 
 	
 	The target directory is called 'sorted'.`,
 }
