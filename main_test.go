@@ -1,10 +1,10 @@
 package main
 
-import (
-	"fmt"
-	"testing"
-)
+import "testing"
 
-func TestRename(t *testing.T, src string) {
-	fmt.Errorf("fail")
+const checkMark = "\u2713"
+const ballotX = "\u2717"
+
+func TestRename(t *testing.T) {
+
 }

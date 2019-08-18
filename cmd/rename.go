@@ -110,8 +110,11 @@ func Rename(src string) error {
 // and sends the absolute path of each found file on paths.
 func walkDir(dir string, paths chan<- string) error {
 	fi, err := os.Stat(dir)
+	if err != nil {
+		return fmt.Errorf("could not read file %s: %v", dir, err)
+	}
 	if !fi.IsDir() {
-		path, err := filepath.Abs(filepath.Join(dir))
+		path, err := filepath.Abs(dir)
 		if err != nil {
 			log.Fatal(err)
 		}
