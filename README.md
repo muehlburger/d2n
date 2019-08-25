@@ -1,5 +1,6 @@
 # d2n
 [![Go Report Card](https://goreportcard.com/badge/github.com/muehlburger/d2n)](https://goreportcard.com/report/github.com/muehlburger/d2n)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/muehlburger/d2n/blob/master/LICENSE)
 
 d2n adds ISO time-stamps to files.
 
