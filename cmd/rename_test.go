@@ -23,6 +23,9 @@ func setup(t *testing.T) (*os.File, func()) {
 	}
 
 	err = os.Chtimes(f.Name(), aTime, mTime)
+	if err != nil {
+		t.Fatalf("could not update modification and creation timestamps: %v", err)
+	}
 	return f, teardown
 }
 
