@@ -1,4 +1,5 @@
 # d2n
+[![Go Report Card](https://goreportcard.com/badge/github.com/muehlburger/d2n)](https://goreportcard.com/report/github.com/muehlburger/d2n)
 
 d2n adds ISO time-stamps to files.
 
