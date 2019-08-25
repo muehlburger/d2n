@@ -86,24 +86,24 @@ loop:
 	}
 
 	for _, f := range names {
-		if err := Rename(f); err != nil {
+		if err := os.Rename(f, Rename(f)); err != nil {
 			return err
 		}
 	}
 	return nil
 }
 
-// Rename renames files from src to dst.
-func Rename(src string) error {
+// Rename renames a file
+func Rename(src string) string {
 	f, err := os.Stat(src)
 	if err != nil {
-		return err
+		log.Fatalf("could not update filepath of %s, %v", src, err)
 	}
 
 	dst := fmt.Sprintf("%s%s", f.ModTime().Format(dateFormat), strings.ToLower(filepath.Ext(src)))
 	dst = filepath.Join(filepath.Dir(src), dst)
 	log.Printf("%s -> %s", src, dst)
-	return os.Rename(src, dst)
+	return dst
 }
 
 // walkDir recursively walks the file tree rooted at dir
