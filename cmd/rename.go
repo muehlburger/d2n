@@ -100,9 +100,14 @@ func Rename(src string) string {
 		log.Fatalf("could not update filepath of %s, %v", src, err)
 	}
 
-	dst := fmt.Sprintf("%s%s", f.ModTime().Format(dateFormat), strings.ToLower(filepath.Ext(src)))
+	dst := f.Name()
+
+	if !strings.HasPrefix(dst, f.ModTime().Format(dateFormat)) {
+		dst = fmt.Sprintf("%s %s", f.ModTime().Format(dateFormat), dst)
+	}
 	dst = filepath.Join(filepath.Dir(src), dst)
-	log.Printf("%s -> %s", src, dst)
+	log.Printf("rename %s -> %s", src, dst)
+
 	return dst
 }
 

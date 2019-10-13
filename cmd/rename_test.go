@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -35,19 +36,9 @@ func TestRenameToModTime(t *testing.T) {
 
 	n := filepath.Base(Rename(f.Name()))
 
-	if n != "2016-02-20T05.52.03" {
-		t.Errorf("filename should be \"2016-02-20T05.52.03\"; got: %v", n)
-	}
+	expected := fmt.Sprintf("%s %s", "2016-02-20T05.52.03", filepath.Base(f.Name()))
 
-	n = filepath.Base(Rename(f.Name()))
-
-	if n != "2016-02-20T05.52.03" {
-		t.Errorf("filename should be \"2016-02-20T05.52.03\"; got: %v", n)
-	}
-
-	n = filepath.Base(Rename(f.Name()))
-
-	if n != "2016-02-20T05.52.03" {
-		t.Errorf("filename should be \"2016-02-20T05.52.03\"; got: %v", n)
+	if n != expected {
+		t.Errorf("filename should be \"%s\"; got: %v", expected, n)
 	}
 }
