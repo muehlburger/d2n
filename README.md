@@ -18,10 +18,14 @@ go get -u github.com/muehlburger/d2n
 
 ### Examples
 
-Sort files:
+Rename files:
+1. Add ISO Timestamps
+2. Add Filenames
 
 ```bash
-d2n rename -s path-to-starting-folder
+d2n rename -s ./folder
+
+2019/10/13 21:09:49 rename /tmp/IMG_20191011_145813.jpg -> /tmp/2019-10-11T14.58.15 IMG_20191011_145813.jpg
 ```
 
 ## Authors
