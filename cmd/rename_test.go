@@ -1,7 +1,9 @@
 package cmd
 
 import (
+	"bytes"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -40,5 +42,19 @@ func TestRenameToModTime(t *testing.T) {
 
 	if n != expected {
 		t.Errorf("filename should be \"%s\"; got: %v", expected, n)
+	}
+}
+
+func createTmpFile(t *testing.T, filepath, data string) {
+	f, err := os.Create(filepath)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	defer f.Close()
+	if _, err := io.Copy(f, bytes.NewBuffer([]byte(data))); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if err := f.Close(); err != nil {
+		t.Fatal(err)
 	}
 }
