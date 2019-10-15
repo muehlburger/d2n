@@ -31,20 +31,14 @@ go get -u github.com/muehlburger/d2n
 ```bash
 d2n rename -s ./image.jpg
 
-2019/10/14 10:43:09 rename /image.jpg -> /2019-10-14T10.43.05 test.jpg
+2019/10/14 10:43:09 rename /image.jpg -> /2019-10-14T10.43.05 image.jpg
 ```
 
-### Examples
+### TODOs
 
-Rename files:
-1. Add ISO Timestamps
-2. Add Filenames
-
-```bash
-d2n rename -s ./folder
-
-2019/10/13 21:09:49 rename /tmp/IMG_20191011_145813.jpg -> /tmp/2019-10-11T14.58.15 IMG_20191011_145813.jpg
-```
+1. [x] Add ISO Timestamps
+2. [ ] Support adding/removing/changing of filenames
+3. [ ] Support tags
 
 ## Authors
 
