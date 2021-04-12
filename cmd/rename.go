@@ -101,10 +101,13 @@ func Rename(src string) string {
 	}
 
 	dst := f.Name()
-
-	if !strings.HasPrefix(dst, f.ModTime().Format(dateFormat)) {
-		dst = fmt.Sprintf("%s %s", f.ModTime().Format(dateFormat), dst)
+	extension := strings.ToLower(filepath.Ext(dst))
+	if extension != "" {
+		dst = fmt.Sprintf("%s%s", f.ModTime().Format(dateFormat), extension)
+	} else {
+		dst = f.ModTime().Format(dateFormat)
 	}
+
 	dst = filepath.Join(filepath.Dir(src), dst)
 	log.Printf("rename %s -> %s", src, dst)
 

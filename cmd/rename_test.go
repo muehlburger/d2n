@@ -15,9 +15,6 @@
 package cmd
 
 import (
-	"bytes"
-	"fmt"
-	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -26,11 +23,11 @@ import (
 )
 
 // setup creates a testfile and sets creation and modification times.
-func setup(t *testing.T) (*os.File, func()) {
+func setup(t *testing.T, pattern string) (*os.File, func()) {
 	mTime := time.Date(2016, time.February, 20, 5, 52, 3, 0, time.Local)
 	aTime := time.Date(2016, time.February, 20, 5, 52, 0, 0, time.Local)
 
-	f, err := ioutil.TempFile("", "")
+	f, err := ioutil.TempFile("", pattern)
 	if err != nil {
 		t.Fatalf("could not create temp file: %v", err)
 	}
@@ -46,29 +43,41 @@ func setup(t *testing.T) (*os.File, func()) {
 	return f, teardown
 }
 
-func TestRenameToModTime(t *testing.T) {
-	f, teardown := setup(t)
+func TestRenameWithJpgExtension(t *testing.T) {
+	f, teardown := setup(t, "*.jpg")
 	defer teardown()
 
 	n := filepath.Base(Rename(f.Name()))
 
-	expected := fmt.Sprintf("%s %s", "2016-02-20T05.52.03", filepath.Base(f.Name()))
+	expected := "2016-02-20T05.52.03.jpg"
 
 	if n != expected {
 		t.Errorf("filename should be \"%s\"; got: %v", expected, n)
 	}
 }
 
-func createTmpFile(t *testing.T, filepath, data string) {
-	f, err := os.Create(filepath)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
+func TestRenameWithoutExtension(t *testing.T) {
+	f, teardown := setup(t, "")
+	defer teardown()
+
+	n := filepath.Base(Rename(f.Name()))
+
+	expected := "2016-02-20T05.52.03"
+
+	if n != expected {
+		t.Errorf("filename should be \"%s\"; got: %v", expected, n)
 	}
-	defer f.Close()
-	if _, err := io.Copy(f, bytes.NewBuffer([]byte(data))); err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	if err := f.Close(); err != nil {
-		t.Fatal(err)
+}
+
+func TestRenameWithExtensionToLowercase(t *testing.T) {
+	f, teardown := setup(t, "*.JPG")
+	defer teardown()
+
+	n := filepath.Base(Rename(f.Name()))
+
+	expected := "2016-02-20T05.52.03.jpg"
+
+	if n != expected {
+		t.Errorf("filename should be \"%s\"; got: %v", expected, n)
 	}
 }
