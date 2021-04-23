@@ -17,8 +17,8 @@ with the (older) DIN 5008 version with dots. (see [date2name] for more informati
 
 ## Features
 
-- Adds timestamps in ISO 8601+ format to filenames
-- Delimits hours, minutes, seconds using dots as in DIN 5008
+- Renames files to timestamps in ISO 8601+ format
+- Delimits hours, minutes, seconds using dots as in DIN 5008 
 
 ## Installation
 
