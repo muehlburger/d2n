@@ -31,7 +31,7 @@ go get -u github.com/muehlburger/d2n
 ```bash
 d2n rename -s ./image.jpg
 
-2019/10/14 10:43:09 rename /image.jpg -> /2019-10-14T10.43.05 image.jpg
+2021/04/23 18:05:57 rename /image.jpg -> /2018-05-31T22.39.26.jpg
 ```
 
 ### TODOs
