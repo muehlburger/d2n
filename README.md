@@ -2,11 +2,9 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/muehlburger/d2n)](https://goreportcard.com/report/github.com/muehlburger/d2n)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/muehlburger/d2n/blob/master/LICENSE)
 
-d2n adds timestamps in ISO 8601+ format
-YYYY-MM-DD (http://datestamps.org/index.shtml) at the beginning of
-the filenames to files. d2n is inspired by Karl Voit's article on "[Managing Digital Files]" and his [date2name] tool but not 100% compatible.
+d2n adds timestamps in ISO 8601+ format YYYY-MM-DD (http://datestamps.org/index.shtml) at the beginning of the filenames to files. d2n is inspired by Karl Voit's article on "[Managing Digital Files]" and his [date2name] tool but not 100% compatible.
 
-If the timestamp exists at the beginning of the filename, it will be ignored. Executed with an examplefilename of "image.jpg", it results in "2006-01-02T15.04.05 image.jpg".
+If the timestamp exists at the beginning of the filename, it will be ignored. Executed with an examplefilename of "image.jpg", it results in "2006-01-02T15.04.05.jpg".
 
 Note: Other that defined in ISO 8601+ the delimiter between hours,
 minutes, and seconds is not a colon but a dot. Colons are causing
